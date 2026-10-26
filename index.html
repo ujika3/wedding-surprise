@@ -1,0 +1,509 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>貴女は0530日の花嫁</title>
+
+  <style>
+    /* サイト全体の設定 */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #9da2bb;
+      color: #171721;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN",
+        "Noto Serif JP", serif;
+      line-height: 1.9;
+    }
+
+    /* 上部の薔薇の写真エリア */
+    .hero {
+      min-height: 180px;
+      background:
+        linear-gradient(
+          rgba(40, 30, 35, 0.08),
+          rgba(40, 30, 35, 0.08)
+        ),
+        linear-gradient(135deg, #c8a99d, #eee5df, #b7b8ae);
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* サイトのタイトル部分 */
+    header {
+      text-align: center;
+      padding: 30px 20px 35px;
+    }
+
+    .site-label {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: clamp(20px, 5vw, 28px);
+      font-weight: normal;
+      margin: 12px 0 35px;
+    }
+
+    /* メニュー */
+    nav {
+      max-width: 230px;
+      margin: 0 auto;
+      padding: 18px 0;
+      border-top: 3px solid #171721;
+      border-bottom: 3px solid #171721;
+    }
+
+    nav button {
+      display: block;
+      width: 100%;
+      padding: 3px 10px;
+      border: none;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-size: 19px;
+      cursor: pointer;
+    }
+
+    nav button:hover,
+    nav button:focus-visible {
+      background: rgba(255, 255, 255, 0.25);
+      text-decoration: underline;
+    }
+
+    /* 各ページの中身 */
+    main {
+      max-width: 720px;
+      min-height: 300px;
+      margin: 0 auto;
+      padding: 32px 24px 48px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    h2 {
+      font-size: 21px;
+      font-weight: normal;
+      border-bottom: 2px solid #171721;
+      padding-bottom: 8px;
+      margin-top: 0;
+    }
+
+    .note {
+      font-size: 14px;
+    }
+
+    .back-button {
+      display: block;
+      margin: 30px auto 0;
+      padding: 8px 20px;
+      border: 1px solid #171721;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 13px;
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        min-height: 130px;
+      }
+
+      header {
+        padding-top: 24px;
+      }
+
+      main {
+        padding: 26px 20px 40px;
+      }
+    }
+    
+/* BBSの説明 */
+.bbs-intro {
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+/* スレッドのタイトル欄 */
+.thread-title {
+  padding: 16px;
+  border: 1px solid #626780;
+  background: rgba(255, 255, 255, 0.17);
+  margin-bottom: 24px;
+}
+
+.thread-label {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.thread-title h3 {
+  font-size: 17px;
+  line-height: 1.7;
+  margin: 8px 0;
+}
+
+.thread-title p {
+  font-size: 12px;
+  margin-bottom: 0;
+}
+
+/* 投稿1件ずつの枠 */
+.post {
+  padding: 16px 12px;
+  border-bottom: 1px dotted #555a70;
+}
+
+.post-meta {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.post-number {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.post-name {
+  font-weight: bold;
+}
+
+.post-date {
+  display: block;
+  margin-top: 3px;
+  opacity: 0.8;
+}
+
+.post-body {
+  margin: 12px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* 返信フォーム */
+.reply-form {
+  margin-top: 32px;
+  padding: 18px;
+  border: 1px solid #626780;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.reply-form h3 {
+  font-size: 18px;
+  font-weight: normal;
+  margin-top: 0;
+}
+
+.reply-form label {
+  display: block;
+  font-size: 14px;
+  margin: 14px 0 5px;
+}
+
+.reply-form input,
+.reply-form textarea {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #777b91;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.75);
+  color: #171721;
+  font: inherit;
+  font-size: 16px;
+}
+
+.reply-form textarea {
+  resize: vertical;
+}
+
+.reply-form button {
+  margin-top: 16px;
+  padding: 9px 22px;
+  border: 1px solid #171721;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.form-message {
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+  </style>
+</head>
+
+<body>
+
+  <!-- 薔薇の写真を置く場所 -->
+  <div class="hero"></div>
+
+  <header>
+    <div class="site-label">音夢</div>
+
+    <h1>貴女は0530日の花嫁</h1>
+
+    <nav aria-label="サイトメニュー">
+      <button data-page="intro">info</button>
+      <button data-page="contents">contents</button>
+      <button data-page="links">link</button>
+      <button data-page="bbs">bbs</button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- はじめに -->
+    <section id="intro" class="page active">
+      <h2>info</h2>
+      <p>
+        ようこそ。
+      </p>
+      <p>
+        ここは、黒歴史時代を共に過ごした我々の独壇場、
+        プレゼントできるものを考え迷走した末に誕生した結婚お祝い余興サイトです。
+      </p>
+      <p class="note">
+        ※関係者以外お断り。
+      </p>
+    </section>
+
+    <!-- contents -->
+    <section id="contents" class="page">
+      <h2>contents</h2>
+      <p>
+        この場所に、みんなの思い出や懐かしい小ネタを
+        少しずつ追加していく予定です。
+      </p>
+      <p>
+        あの頃の記憶をたどるもよし、
+        今の話をするもよし。
+      </p>
+    </section>
+
+    <!-- LINK -->
+    <section id="links" class="page">
+      <h2>link</h2>
+      <p>
+        当サイトは同志による同志のための非公式企画です。
+      </p>
+      <p class="note">
+        リンクを追加する場所。今は準備中です。
+      </p>
+    </section>
+
+    <!-- BBS -->
+<section id="bbs" class="page">
+  <h2>BBS</h2>
+
+  <p class="bbs-intro">
+    同志たちよ、祝辞を述べよ……！
+  </p>
+
+  <!-- スレッドのタイトル -->
+  <div class="thread-title">
+    <span class="thread-label">THREAD No.001</span>
+    <h3>【祝】結婚したのか？俺以外のやつと…</h3>
+    <p>結婚お祝いスレです。音夢ちゃんず集まれ〜！</p>
+  </div>
+
+  <!-- 投稿が表示される場所 -->
+  <div id="posts" class="posts"></div>
+
+  <!-- 返信フォーム -->
+  <div class="reply-form">
+    <h3>書き込む</h3>
+
+    <label for="postName">名前</label>
+    <input
+      id="postName"
+      type="text"
+      maxlength="30"
+      placeholder="名前をいれてね⭐︎"
+    >
+
+    <label for="postMessage">メッセージ</label>
+    <textarea
+      id="postMessage"
+      rows="5"
+      maxlength="1000"
+      placeholder="メッセージを入力してn(("
+    ></textarea>
+
+    <button id="submitPost" type="button">
+      書き込む
+    </button>
+
+    <p id="formMessage" class="form-message" aria-live="polite"></p>
+  </div>
+
+  <button class="back-button" id="backButton">
+    TOPへ戻る
+  </button>
+</section>
+
+
+  </main>
+
+  <footer>
+    Since: （結婚記念日）<br>
+    © 秘密の同志会
+  </footer>
+
+  <script>
+   
+/* メニューのページ切り替え */
+const menuButtons = document.querySelectorAll("[data-page]");
+const pages = document.querySelectorAll(".page");
+
+menuButtons.forEach(function(button) {
+  button.addEventListener("click", function() {
+    const targetId = button.dataset.page;
+
+    pages.forEach(function(page) {
+      page.classList.remove("active");
+    });
+
+    document.getElementById(targetId).classList.add("active");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  });
+});
+
+/* TOPへ戻る */
+document.getElementById("backButton")
+  .addEventListener("click", function() {
+    pages.forEach(function(page) {
+      page.classList.remove("active");
+    });
+
+    document.getElementById("intro").classList.add("active");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  });
+
+/* BBSの投稿データ */
+const posts = [
+  {
+    name: "管理人",
+    message:
+      "ご結婚おめでとう〜！！！\n\n" +
+      "めでてぇ〜！！！" +
+      "黒歴史を共にした友の人生の大きな節目祝えんの激アツ！！\n\n" +
+      "末永くお幸せに！",
+    date: "2026/10/17"
+  }
+];
+
+/* 投稿一覧を描画する */
+const postsArea = document.getElementById("posts");
+
+function renderPosts() {
+  postsArea.replaceChildren();
+
+  posts.forEach(function(post, index) {
+    const article = document.createElement("article");
+    article.className = "post";
+
+    const meta = document.createElement("div");
+    meta.className = "post-meta";
+
+    const number = document.createElement("span");
+    number.className = "post-number";
+    number.textContent = index + 1 + ":";
+
+    const name = document.createElement("span");
+    name.className = "post-name";
+    name.textContent = post.name;
+
+    const date = document.createElement("span");
+    date.className = "post-date";
+    date.textContent = post.date;
+
+    const message = document.createElement("p");
+    message.className = "post-body";
+    message.textContent = post.message;
+
+    meta.append(number, name, date);
+    article.append(meta, message);
+    postsArea.append(article);
+  });
+}
+
+/* 新しい返信を追加する */
+document.getElementById("submitPost")
+  .addEventListener("click", function() {
+    const nameInput = document.getElementById("postName");
+    const messageInput = document.getElementById("postMessage");
+    const formMessage = document.getElementById("formMessage");
+
+    const name = nameInput.value.trim() || "匿名希望";
+    const message = messageInput.value.trim();
+
+    if (!message) {
+      formMessage.textContent = "メッセージを入力してね。";
+      return;
+    }
+
+    const now = new Date();
+    const date =
+      now.getFullYear() + "/" +
+      String(now.getMonth() + 1).padStart(2, "0") + "/" +
+      String(now.getDate()).padStart(2, "0");
+
+    posts.push({
+      name: name,
+      message: message,
+      date: date
+    });
+
+    renderPosts();
+
+    nameInput.value = "";
+    messageInput.value = "";
+    formMessage.textContent = "書き込みました！";
+
+    postsArea.lastElementChild.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  });
+
+/* 最初の投稿を表示 */
+renderPosts();
+
+  </script>
+
+</body>
+</html>
+
