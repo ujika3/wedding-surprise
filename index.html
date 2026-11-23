@@ -373,8 +373,16 @@
     Since: （結婚記念日）<br>
     © 秘密の同志会
   </footer>
-
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+      const supabaseUrl = "https://asbpcgfpnhpdrldlhcqv.supabase.co";
+const supabaseKey = "sb_publishable_WAcDDQDVnMt3hlhqNBIM5g_ErXuqRs0";
+
+const supabaseClient = window.supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
    
 /* メニューのページ切り替え */
 const menuButtons = document.querySelectorAll("[data-page]");
@@ -413,11 +421,11 @@ document.getElementById("backButton")
   });
 
 /* BBSの投稿データ */
-const posts = [
+let posts = [
   {
     name: "管理人",
     message:
-      "ご結婚おめでとう〜！！！\n\n" +
+      "結婚おめでとう〜！！！\n\n" +
       "めでてぇ〜！！！" +
       "黒歴史を共にした友の人生の大きな節目祝えんの激アツ！！\n\n" +
       "末永くお幸せに！",
@@ -426,7 +434,7 @@ const posts = [
 ];
 
 /* 投稿一覧を描画する */
-const postsArea = document.getElementById("posts");
+　jconst postsArea = document.getElementById("posts");
 
 function renderPosts() {
   postsArea.replaceChildren();
@@ -459,10 +467,31 @@ function renderPosts() {
     postsArea.append(article);
   });
 }
+/* Supabaseから投稿を読み込む */
+async function loadPosts() {
+  const { data, error } = await supabaseClient
+    .from("posts")
+    .select("name, content, created_at")
+    .order("created_at", { ascending: true });
 
+  if (error) {
+    console.error("読み込みエラー:", error);
+    return;
+  }
+
+  posts = data.map(function(post) {
+    return {
+      name: post.name,
+      message: post.content,
+      date: new Date(post.created_at).toLocaleDateString("ja-JP")
+    };
+  });
+
+  renderPosts();
+}
 /* 新しい返信を追加する */
 document.getElementById("submitPost")
-  .addEventListener("click", function() {
+  .addEventListener("click", async function() {
     const nameInput = document.getElementById("postName");
     const messageInput = document.getElementById("postMessage");
     const formMessage = document.getElementById("formMessage");
@@ -481,13 +510,22 @@ document.getElementById("submitPost")
       String(now.getMonth() + 1).padStart(2, "0") + "/" +
       String(now.getDate()).padStart(2, "0");
 
-    posts.push({
+    const { error } = await supabaseClient
+  .from("posts")
+  .insert([
+    {
       name: name,
-      message: message,
-      date: date
-    });
+      content: message
+    }
+  ]);
 
-    renderPosts();
+if (error) {
+  console.error("投稿エラー:", error);
+  formMessage.textContent = "投稿できませんでした。";
+  return;
+}
+
+await loadPosts();
 
     nameInput.value = "";
     messageInput.value = "";
@@ -500,10 +538,8 @@ document.getElementById("submitPost")
   });
 
 /* 最初の投稿を表示 */
-renderPosts();
-
+loadPosts();
   </script>
 
 </body>
 </html>
-
